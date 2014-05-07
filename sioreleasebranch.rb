@@ -16,7 +16,9 @@ require 'fileutils'
 
 def sio_release_branch!
   finish! unless branching_confirmed
-  
+
+  verify_that_working_directory_is_clean
+
   develop = "develop"
 
   git_check_out develop
@@ -29,7 +31,6 @@ def sio_release_branch!
   release         = get_release_branch(release_version)
 
   git_branch_out release
-  finish! "👍"
 
   set_pom_versions_as release_version
 
@@ -50,6 +51,13 @@ end
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+def verify_that_working_directory_is_clean()
+  unless run("git status").include? "working directory clean"
+    error_message "Clean up the working directory before running this script! Check with", "git status"
+    finish!
+  end
+end
 
 def get_version_from_pom()
   path = "#{Dir.pwd}/pom.xml"
@@ -94,7 +102,10 @@ def get_release_branch(release_version)
 end
 
 def set_pom_versions_as(version)
-  # not implemented
+  info_message "Setting POM versions to", version
+  run "changePomVersion #{version}"
+  run "git commit -am 'Bumped version #{version}'"
+  run "git push -q origin #{current_branch}"
 end
 
 
