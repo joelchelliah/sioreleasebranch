@@ -142,7 +142,7 @@ def info_message(text, reason = nil)
   if reason
     puts "    > #{text}: [ ".yellow << reason.green << " ]".yellow
   else
-    puts "    > #{text}"
+    puts "    > ".yellow + text
   end
 end
 
@@ -160,7 +160,7 @@ def branching_confirmed
 
    #{"This script will:".yellow} #{DESC}
    END
-   prompt("\n >> Confirm release branching:"+ " [#{'y'.pink}/#{'n'.pink}] ") =~ /^y$|^Y$|^yes$|^Yes$/
+   prompt("\n ?> Confirm release branching:"+ " [#{'y'.pink}/#{'n'.pink}] ") =~ /^y$|^Y$|^yes$|^Yes$/
 end
 
 def prompt(*args)
