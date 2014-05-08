@@ -26,7 +26,7 @@ def sio_release_branch!
   git_pull
 
   develop_version = get_version_from_pom
-  new_dev_version = increment_snapshot_version(develop_version)
+  new_dev_version = increment_version(develop_version)
   release_version = get_release_version(develop_version)
   release         = get_release_branch(release_version)
 
@@ -41,10 +41,6 @@ def sio_release_branch!
   git_check_out release
 
   finish! "👍"
-  
-
-# verify_version_format(develop_version)
-
 end
 
 
@@ -87,7 +83,7 @@ def check_version_format(version)
   end
 end
 
-def increment_snapshot_version(dev_version)
+def increment_version(dev_version)
   m = dev_version.match(/(\w+)\.(\w+)\.(\w+)-SNAPSHOT/)
   "#{m[1]}.#{m[2].to_i + 1}.#{m[3]}-SNAPSHOT"
 end
@@ -104,12 +100,9 @@ end
 def set_pom_versions_as(version)
   info_message "Setting POM versions to", version
   run "changePomVersion #{version}"
-  run "git commit -am 'Bumped version #{version}'"
+  run "git commit -am 'Bumped version #{version}' -q"
   run "git push -q origin #{current_branch}"
 end
-
-
-
 
 def git_check_out(branch)
   unless current_branch.include? branch
