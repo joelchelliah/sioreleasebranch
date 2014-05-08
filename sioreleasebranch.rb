@@ -49,6 +49,8 @@ end
 # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 def verify_that_working_directory_is_clean()
+  puts
+  info_message "Checking that working directory is clean".yellow
   unless run("git status").include? "working directory clean"
     error_message "Clean up the working directory before running this script! Check with", "git status"
     finish!
@@ -57,7 +59,7 @@ end
 
 def get_version_from_pom()
   path = "#{Dir.pwd}/pom.xml"
-  info_message "Getting version from: #{path.pink}"
+  info_message "Getting version from: ".yellow + path.pink
   unless File.exists? path
     error_message "File does not exist", path
     finish!
@@ -158,7 +160,7 @@ def branching_confirmed
 
    #{"This script will:".yellow} #{DESC}
    END
-   prompt("  Confirm release branching:".yellow + " [#{'y'.pink}/#{'n'.pink}] ") =~ /^y$|^Y$|^yes$|^Yes$/
+   prompt("\n >> Confirm release branching:"+ " [#{'y'.pink}/#{'n'.pink}] ") =~ /^y$|^Y$|^yes$|^Yes$/
 end
 
 def prompt(*args)
